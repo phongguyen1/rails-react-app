@@ -12,8 +12,7 @@ import Pagination from "./Pagination";
 
 function PostsList() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [debouncedSearchTerm, setDebouncedSearchTerm] =
-        useURLSearchParam("search");
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useURLSearchParam("search");
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -69,6 +68,7 @@ function PostsList() {
 
     return (
         <div>
+            <h1 className="text-center">Posts List</h1>
             <SearchBar
                 value={searchTerm}
                 onSearchChange={handleDebouncedSearchChange}
@@ -83,39 +83,42 @@ function PostsList() {
             {loading && <p>Loading...</p>}
             {error && <p>Error loading posts.</p>}
 
-            {posts.map((post) => (
-                <div key={post.id} className="post-container">
-                    <h2>
-                        <Link to={`/posts/${post.id}`} className="post-title">
-                            {post.title}
-                        </Link>
-                    </h2>
-                    <div className="post-image-container">
-                        {/* Standard image if the url exists */}
-                        {/* If the url does not exist, render an empty div */}
-                        {/* of equal size to the standard post-image container */}
-                        {post.image_url ? (
-                            <img
-                                src={post.image_url}
-                                alt={post.title}
-                                className="post-image"
-                            />
-                        ) : (
-                            <div
-                                className="post-image-stub"
-                                data-testid="post-image-stub"
-                            />
-                        )}
-                    </div>
-                    <div className="post-links">
-                        <Link to={`/posts/${post.id}/edit`}>Edit</Link>
-                        {" | "}
-                        <button onClick={() => deletePostHandler(post.id)}>
-                            Delete
-                        </button>
-                    </div>
+            <div className="text-center">
+                <div className="row align-self-stretch">
+                    {posts.map((post) => (
+                        <div key={post.id} className="col-4">
+                            <div className="card">
+                                {post.image_url ? (
+                                    <img src={post.image_url} alt={post.title} className="card-img-top" />
+                                ) : (
+                                    <div className="card-img-top" data-testid="post-image-stub" />
+                                )}
+                                <div className="card-body">
+                                    <h5 className="card-title">{post.title}</h5>
+                                    <p className="card-text">{post.body}</p>
+                                </div>
+                                <div className="card-body">
+                                    <Link className="card-link" to={`/posts/${post.id}`}>
+                                        Detail
+                                    </Link>
+                                    <Link className="card-link" to={`/posts/${post.id}/edit`}>
+                                        Edit
+                                    </Link>
+                                    <Link
+                                        className="card-link"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            deletePostHandler(post.id);
+                                        }}
+                                    >
+                                        Delete
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            ))}
+            </div>
         </div>
     );
 }

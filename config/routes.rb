@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
-  resources :users
+  
   # API routes should be in /api/v1
   namespace :api do
     namespace :v1 do
       get 'search/posts'
       resources :posts
+      resources :users
+      get 'signup', to: 'users#new'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
