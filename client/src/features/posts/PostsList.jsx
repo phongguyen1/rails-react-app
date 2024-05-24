@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { deletePost } from "../../services/postService";
-import "./PostImage.css";
 
 import SearchBar from "./SearchBar";
 import usePostsData from "../../hooks/usePostsData";

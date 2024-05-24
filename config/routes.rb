@@ -6,7 +6,6 @@ Rails.application.routes.draw do
       get 'search/posts'
       resources :posts
       resources :users
-      get 'signup', to: 'users#new'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

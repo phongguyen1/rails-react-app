@@ -27,7 +27,7 @@ class Api::V1::PostsController < ApplicationController
   # POST /posts
   def create
     @post = Post.new(post_params)
-
+    @post.user = current_user
     if @post.save
       # We can't render the @post because we are now in /api/v1/posts
       render json: @post, status: :created, location: api_v1_post_url(@post)
