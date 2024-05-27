@@ -18,7 +18,8 @@ class Api::V1::UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render json: @user, status: :created, location: api_v1_post_url(@user)
+      session[:user_id] = @user.id
+      render json: @user.as_json.merge(session: session), status: :created, location: api_v1_post_url(@user)
     else
       render json: @user.errors, status: :unprocessable_entity
     end

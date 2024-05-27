@@ -26,11 +26,7 @@ function Pagination({ currentPage, totalPosts, postsPerPage, onPageChange }) {
 
         if (currentPage <= 6) {
             const lastPageBeforeEllipsis = 8;
-            return [
-                ...createRange(1, lastPageBeforeEllipsis),
-                "...",
-                totalPages,
-            ];
+            return [...createRange(1, lastPageBeforeEllipsis), "...", totalPages];
         }
 
         if (currentPage >= totalPages - 5) {
@@ -52,18 +48,14 @@ function Pagination({ currentPage, totalPosts, postsPerPage, onPageChange }) {
     };
 
     return (
-        <div>
+        <div className="d-flex justify-content-center mb-3">
             <button onClick={handlePrevious} disabled={currentPage === 1}>
                 Previous
             </button>
 
             {getVisiblePageNumbers().map((page, index) =>
                 typeof page === "number" ? (
-                    <button
-                        key={page}
-                        onClick={() => onPageChange(page)}
-                        disabled={currentPage === page}
-                    >
+                    <button key={page} onClick={() => onPageChange(page)} disabled={currentPage === page}>
                         {page}
                     </button>
                 ) : (
@@ -73,10 +65,7 @@ function Pagination({ currentPage, totalPosts, postsPerPage, onPageChange }) {
                 )
             )}
 
-            <button
-                onClick={handleNext}
-                disabled={currentPage === totalPages || totalPages === 0}
-            >
+            <button onClick={handleNext} disabled={currentPage === totalPages || totalPages === 0}>
                 Next
             </button>
         </div>

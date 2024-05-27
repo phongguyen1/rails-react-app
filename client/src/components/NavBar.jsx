@@ -1,58 +1,78 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { signout } from "../services/userService";
+import { MyContext } from "../context/UserContext";
 
 function NavBar() {
+    const { user, setUser } = useContext(MyContext);
+
+    const handleSignOut = async (e) => {
+        e.preventDefault();
+        try {
+            await signout();
+            setUser(null);
+        } catch (error) {
+            console.error("Failed to logout: ", e);
+        }
+    };
     return (
-        <nav className="navbar navbar-expand-lg bg-body-tertiary">
-            <div className="container-fluid">
-                <a className="navbar-brand" href="#">
-                    Navbar
-                </a>
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+        <nav className="navbar navbar-expand-lg">
+            <div className="container-fluid justify-content-between">
+                <div className="d-flex">
+                    <a className="navbar-brand" href="/">
+                        DEMO
+                    </a>
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0 align-items-center d-flex">
                         <li className="nav-item">
-                            <Link to="/signin" className="nav-link active">
-                                Login
+                            <Link to="/" className="nav-link">
+                                All Posts List
                             </Link>
                         </li>
-                        <li className="nav-item">
-                            <Link to="/signup" className="nav-link">
-                                Signup
-                            </Link>
-                        </li>
-                        <li className="nav-item dropdown">
-                            <a
-                                className="nav-link dropdown-toggle"
-                                href="#"
-                                role="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                Post
-                            </a>
-                            <ul className="dropdown-menu">
-                                <li>
-                                    <Link to="/" className="dropdown-item">
-                                        Posts List
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/new" className="dropdown-item">
+                        {user && (
+                            <>
+                                <li className="nav-item">
+                                    <Link to="/new" className="nav-link">
                                         Create New Post
                                     </Link>
                                 </li>
-                            </ul>
-                        </li>
+                                <li className="nav-item">
+                                    <Link to="/" className="nav-link">
+                                        My Posts
+                                    </Link>
+                                </li>
+                            </>
+                        )}
+                    </ul>
+                </div>
+
+                <div>
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0 align-items-center d-flex">
+                        {!user && (
+                            <>
+                                <li className="nav-item">
+                                    <Link to="/signin" className="nav-link active">
+                                        Login
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to="/signup" className="nav-link">
+                                        Signup
+                                    </Link>
+                                </li>
+                            </>
+                        )}
+                        {user && (
+                            <>
+                                <li className="nav-item">
+                                    <p className="m-0">Hello {user.username}</p>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" onClick={handleSignOut}>
+                                        Sign Out
+                                    </Link>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </div>
             </div>

@@ -27,7 +27,7 @@ class Api::V1::PostsController < ApplicationController
   # POST /posts
   def create
     @post = Post.new(post_params)
-    @post.user = current_user
+    # @post.user = current_user
     if @post.save
       # We can't render the @post because we are now in /api/v1/posts
       render json: @post, status: :created, location: api_v1_post_url(@post)
@@ -59,6 +59,6 @@ class Api::V1::PostsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def post_params
-    params.require(:post).permit(:title, :body, :image)
+    params.require(:post).permit(:title, :body, :image, :user_id)
   end
 end

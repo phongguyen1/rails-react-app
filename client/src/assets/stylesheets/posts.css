@@ -1,0 +1,15 @@
+
+    .post-card__image {
+        position: relative;
+        padding-top: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    .post-card img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }

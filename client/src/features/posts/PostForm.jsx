@@ -1,27 +1,33 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import PropTypes from "prop-types";
+import { MyContext } from "../../context/UserContext";
 
 function PostForm({ post, headerText, onSubmit, buttonText }) {
+    const { user } = useContext(MyContext);
     const [formData, setFormData] = useState(
         post || {
             title: "",
             body: "",
             image: "",
+            user_id: user.id,
         }
     );
 
     return (
         <div>
-            <h2>{headerText}</h2>
+            <h2 className="text-center">{headerText}</h2>
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
                     onSubmit(formData);
                 }}
             >
-                <div>
-                    <label htmlFor="title">Title:</label>
+                <div className="mb-3">
+                    <label className="form-label" htmlFor="title">
+                        Title:
+                    </label>
                     <input
+                        className="form-control"
                         id="title"
                         type="text"
                         value={formData.title}
@@ -33,9 +39,12 @@ function PostForm({ post, headerText, onSubmit, buttonText }) {
                         }
                     />
                 </div>
-                <div>
-                    <label htmlFor="image">Image:</label>
+                <div className="mb-3">
+                    <label htmlFor="image" className="form-label">
+                        Image:
+                    </label>
                     <input
+                        className="form-control"
                         id="image"
                         type="file"
                         accept="image/*"
@@ -47,9 +56,12 @@ function PostForm({ post, headerText, onSubmit, buttonText }) {
                         }}
                     />
                 </div>
-                <div>
-                    <label htmlFor="body">Body:</label>
+                <div className="mb-3">
+                    <label htmlFor="body" className="form-label">
+                        Body:
+                    </label>
                     <textarea
+                        className="form-control"
                         id="body"
                         value={formData.body}
                         onChange={(e) =>

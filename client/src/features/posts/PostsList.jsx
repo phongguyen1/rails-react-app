@@ -1,5 +1,5 @@
 // API_URL comes from the .env.development file
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { deletePost } from "../../services/postService";
 
@@ -8,8 +8,11 @@ import usePostsData from "../../hooks/usePostsData";
 import useURLSearchParam from "../../hooks/useURLSearchParam";
 
 import Pagination from "./Pagination";
+import { MyContext } from "../../context/UserContext";
+import "../../assets/stylesheets/posts.css";
 
 function PostsList() {
+    const { user } = useContext(MyContext);
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useURLSearchParam("search");
 
@@ -67,18 +70,21 @@ function PostsList() {
 
     return (
         <div>
-            <h1 className="text-center">Posts List</h1>
-            <SearchBar
-                value={searchTerm}
-                onSearchChange={handleDebouncedSearchChange}
-                onImmediateChange={handleImmediateSearchChange}
-            />
-            <Pagination
-                currentPage={currentPage}
-                totalPosts={totalPosts}
-                postsPerPage={perPage}
-                onPageChange={handlePageChange}
-            />
+            <h1 className="text-center mb-3">Posts List</h1>
+            <div className="d-flex flex-column">
+                <SearchBar
+                    value={searchTerm}
+                    onSearchChange={handleDebouncedSearchChange}
+                    onImmediateChange={handleImmediateSearchChange}
+                />
+                <Pagination
+                    currentPage={currentPage}
+                    totalPosts={totalPosts}
+                    postsPerPage={perPage}
+                    onPageChange={handlePageChange}
+                />
+            </div>
+
             {loading && <p>Loading...</p>}
             {error && <p>Error loading posts.</p>}
 
@@ -86,9 +92,12 @@ function PostsList() {
                 <div className="row align-self-stretch">
                     {posts.map((post) => (
                         <div key={post.id} className="col-4">
-                            <div className="card">
+                            <div className="card post-card">
                                 {post.image_url ? (
-                                    <img src={post.image_url} alt={post.title} className="card-img-top" />
+                                    <div
+                                        className="post-card__image"
+                                        style={{ backgroundImage: `url(${post.image_url})` }}
+                                    ></div>
                                 ) : (
                                     <div className="card-img-top" data-testid="post-image-stub" />
                                 )}
@@ -100,18 +109,22 @@ function PostsList() {
                                     <Link className="card-link" to={`/posts/${post.id}`}>
                                         Detail
                                     </Link>
-                                    <Link className="card-link" to={`/posts/${post.id}/edit`}>
-                                        Edit
-                                    </Link>
-                                    <Link
-                                        className="card-link"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            deletePostHandler(post.id);
-                                        }}
-                                    >
-                                        Delete
-                                    </Link>
+                                    {user?.id === post.user_id && (
+                                        <>
+                                            <Link className="card-link" to={`/posts/${post.id}/edit`}>
+                                                Edit
+                                            </Link>
+                                            <Link
+                                                className="card-link"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    deletePostHandler(post.id);
+                                                }}
+                                            >
+                                                Delete
+                                            </Link>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>

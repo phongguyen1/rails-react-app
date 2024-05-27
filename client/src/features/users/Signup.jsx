@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { signup } from "../../services/userService";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useNavigate } from "react-router-dom";
+import { MyContext } from "../../context/UserContext";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -10,11 +11,15 @@ const Signup = () => {
         email: "",
         password: "",
     });
+    const { user, setUser } = useContext(MyContext);
 
     const handleSignup = async (rawData) => {
         try {
             const formData = objectToFormData({ user: rawData });
-            await signup(formData);
+            const response = await signup(formData);
+            console.log("user", user);
+            setUser((prev) => ({ ...prev, ...response }));
+
             navigate(`/`);
         } catch (e) {
             console.error("Failed to signup: ", e);
