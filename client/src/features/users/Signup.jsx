@@ -11,13 +11,12 @@ const Signup = () => {
         email: "",
         password: "",
     });
-    const { user, setUser } = useContext(MyContext);
+    const { setUser } = useContext(MyContext);
 
     const handleSignup = async (rawData) => {
         try {
             const formData = objectToFormData({ user: rawData });
             const response = await signup(formData);
-            console.log("user", user);
             setUser((prev) => ({ ...prev, ...response }));
 
             navigate(`/`);

@@ -38,4 +38,14 @@ async function signout() {
     return response.json();
 }
 
-export { signup, signin, signout };
+async function destroyUser(user) {
+    const response = await fetch(`${USERS_API_URL}/${user.id}`, {
+        method: "DELETE",
+    });
+
+    if (!response.ok) {
+        throw new Error(response.statusText);
+    }
+}
+
+export { signup, signin, signout, destroyUser };

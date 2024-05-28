@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { signout } from "../services/userService";
+import { signout, destroyUser } from "../services/userService";
 import { MyContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
+    const navigate = useNavigate();
     const { user, setUser } = useContext(MyContext);
 
     const handleSignOut = async (e) => {
@@ -11,8 +13,20 @@ function NavBar() {
         try {
             await signout();
             setUser(null);
+            navigate("/");
         } catch (error) {
             console.error("Failed to logout: ", e);
+        }
+    };
+
+    const handleDestroyUser = async (e) => {
+        e.preventDefault();
+        try {
+            await destroyUser(user);
+            setUser(null);
+            navigate("/");
+        } catch (error) {
+            console.error("error:", error);
         }
     };
     return (
@@ -65,6 +79,11 @@ function NavBar() {
                             <>
                                 <li className="nav-item">
                                     <p className="m-0">Hello {user.username}</p>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" onClick={handleDestroyUser}>
+                                        Destroy Account
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link className="nav-link" onClick={handleSignOut}>
