@@ -20,21 +20,9 @@ function PostsList() {
 
     const initialPageFromURL = Number(searchParams.get("page") || "1");
     const [currentPage, setCurrentPage] = useState(initialPageFromURL);
+    const [deletedID, setDeletedID] = useState(null);
 
-    const [posts, setPosts] = useState([]);
-    const {
-        posts: fetchedPosts,
-        totalPosts: totalPosts,
-        loading: loading,
-        error: error,
-        perPage: perPage,
-    } = usePostsData(debouncedSearchTerm, currentPage); // Note the change here
-
-    useEffect(() => {
-        if (fetchedPosts) {
-            setPosts(fetchedPosts); // Update the posts state once fetchedPosts is available
-        }
-    }, [fetchedPosts]);
+    const { posts, totalPosts, loading, error, perPage } = usePostsData(debouncedSearchTerm, currentPage, deletedID);
 
     useEffect(() => {
         const initialSearchTerm = searchParams.get("search") || "";
@@ -47,7 +35,7 @@ function PostsList() {
     const deletePostHandler = async (id) => {
         try {
             await deletePost(id);
-            setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id));
+            setDeletedID(id);
         } catch (e) {
             console.error("Failed to delete the post: ", e);
         }
@@ -91,16 +79,14 @@ function PostsList() {
             <div className="text-center">
                 <div className="row align-self-stretch">
                     {posts.map((post) => (
-                        <div key={post.id} className="col-4">
+                        <div key={post.id} className="col-3">
                             <div className="card post-card">
-                                {post.image_url ? (
+                                {
                                     <div
                                         className="post-card__image"
                                         style={{ backgroundImage: `url(${post.image_url})` }}
                                     ></div>
-                                ) : (
-                                    <div className="card-img-top" data-testid="post-image-stub" />
-                                )}
+                                }
                                 <div className="card-body">
                                     <h5 className="card-title">{post.title}</h5>
                                     <p className="card-text">{post.body}</p>

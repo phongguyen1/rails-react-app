@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { signout, destroyUser } from "../services/userService";
 import { MyContext } from "../context/UserContext";
@@ -8,10 +8,18 @@ function NavBar() {
     const navigate = useNavigate();
     const { user, setUser } = useContext(MyContext);
 
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser && !user) {
+            setUser(storedUser);
+        }
+    }, [user, setUser]);
+
     const handleSignOut = async (e) => {
         e.preventDefault();
         try {
             await signout();
+            localStorage.setItem("user", "");
             setUser(null);
             navigate("/");
         } catch (error) {
@@ -23,6 +31,7 @@ function NavBar() {
         e.preventDefault();
         try {
             await destroyUser(user);
+            localStorage.setItem("user", "");
             setUser(null);
             navigate("/");
         } catch (error) {

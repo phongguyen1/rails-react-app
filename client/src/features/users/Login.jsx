@@ -10,16 +10,17 @@ const Login = () => {
         email: "",
         password: "",
     });
-    const { user, setUser } = useContext(MyContext);
+    const { setUser } = useContext(MyContext);
 
     const handleSignin = async (rawData) => {
         try {
             const formData = objectToFormData({ user: rawData });
             const response = await signin(formData);
             setUser(response);
+            localStorage.setItem("user", JSON.stringify(response));
             navigate(`/`);
         } catch (e) {
-            console.error("Failed to signup: ", e);
+            console.error("Failed to Signin: ", e);
         }
     };
 
